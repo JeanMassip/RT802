@@ -1,0 +1,25 @@
+version: '3'
+services:
+  mosquitto:
+    image: eclipse-mosquitto
+    volumes:
+      - ./config/:/mosquitto/config:rw
+    ports:
+     - 1883:1883
+     - 9001:9001
+  broker:
+    build:
+      context: "./" 
+      dockerfile: ./Broker/Dockerfile
+  certificate_authority:
+     build:
+      context: "./" 
+      dockerfile: ./CertificateAuthority/Dockerfile
+  vehicule1:
+    build: 
+      context: "./"
+      dockerfile: ./Vehicules/Dockerfile
+  vehicule2:
+    build: 
+      context: "./"
+      dockerfile: ./Vehicules/Dockerfile
