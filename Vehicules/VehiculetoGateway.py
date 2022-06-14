@@ -25,7 +25,7 @@ SLOW_START = int(os.getenv("SL OW_START"))
 SLOW_STOP = int(os.getenv("SLOW_STOP"))
 
 def main(argv):
-    Gateway_url="http://urlgateway:5000/auth"
+    Gateway_url="http://certificate_authority:5000/auth"
     Crt_file = "crtvehicule.pem"
 
     try:
