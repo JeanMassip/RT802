@@ -1,5 +1,9 @@
 version: '3'
 services:
+  certificate_authority:
+     build:
+      context: "./" 
+      dockerfile: ./CertificateAuthority/Dockerfile
   mosquitto:
     image: eclipse-mosquitto
     volumes:
@@ -11,15 +15,17 @@ services:
     build:
       context: "./" 
       dockerfile: ./Broker/Dockerfile
-  certificate_authority:
-     build:
-      context: "./" 
-      dockerfile: ./CertificateAuthority/Dockerfile
+    depends_on:
+      - certificate_authority
   vehicule1:
     build: 
       context: "./"
       dockerfile: ./Vehicules/Dockerfile
+    depends_on:
+      - certificate_authority
   vehicule2:
     build: 
       context: "./"
       dockerfile: ./Vehicules/Dockerfile
+    depends_on:
+      - certificate_authority
