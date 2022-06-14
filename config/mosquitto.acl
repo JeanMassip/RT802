@@ -1,0 +1,6 @@
+pattern readwrite /sensor/cam
+pattern readwrite /sensor/denm
+pattern read /auth/cam
+pattern read /auth/denm
+
+
