@@ -1,31 +1,23 @@
 version: '3'
 services:
   certificate_authority:
-     build:
-      context: "./" 
-      dockerfile: ./CertificateAuthority/Dockerfile
+     build: ./CertificateAuthority
   mosquitto:
     image: eclipse-mosquitto
     volumes:
-      - ./config/:/mosquitto/config:rw
+     - ./config/:/mosquitto/config/:rw
     ports:
      - 1883:1883
      - 9001:9001
   broker:
-    build:
-      context: "./" 
-      dockerfile: ./Broker/Dockerfile
+    build: ./Broker
     depends_on:
       - certificate_authority
   vehicule1:
-    build: 
-      context: "./"
-      dockerfile: ./Vehicules/Dockerfile
+    build: ./Vehicules
     depends_on:
       - certificate_authority
   vehicule2:
-    build: 
-      context: "./"
-      dockerfile: ./Vehicules/Dockerfile
+    build: ./Vehicules
     depends_on:
       - certificate_authority

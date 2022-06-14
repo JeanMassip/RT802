@@ -18,7 +18,7 @@ type CAMHandler struct {
 
 func NewCAMHandler() *CAMHandler {
 	opts := mqtt.NewClientOptions()
-	opts.AddBroker("tcp://127.0.0.1:1883")
+	opts.AddBroker("tcp://mosquitto:1883")
 	opts.SetClientID(fmt.Sprintf("handler-%d", rand.Intn(1000)))
 	client := mqtt.NewClient(opts)
 	if token := client.Connect(); token.Wait() && token.Error() != nil {
