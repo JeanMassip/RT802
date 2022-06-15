@@ -1,6 +1,6 @@
 version: '3'
 services:
-  certificate_authority:
+  ca:
      build: ./CertificateAuthority
   mosquitto:
     image: eclipse-mosquitto
@@ -13,24 +13,26 @@ services:
     build: ./Broker
     depends_on:
       - mosquitto
-      - certificate_authority
+      - ca
   vehicule1:
     build: ./Vehicules
-    environment: 
+    environment:
+      - Password=DtIflMN1M@nLJ_wSoHY~
       - MAX_MESSAGES=50
       - SLOW_START=20
       - SLOW_STOP=40
       - BROKER_ADDR="mosquitto"
       - BROKER_PORT=1883
     depends_on:
-      - certificate_authority
+      - ca
   vehicule2:
     build: ./Vehicules
-    environment: 
+    environment:
+      - Password=DtIflMN1M@nLJ_wSoHY~
       - MAX_MESSAGES=50
       - SLOW_START=20
       - SLOW_STOP=40
       - BROKER_ADDR="mosquitto"
       - BROKER_PORT=1883
     depends_on:
-      - certificate_authority
+      - ca

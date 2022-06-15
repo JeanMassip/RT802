@@ -26,7 +26,7 @@ import requests
 
 backend=default_backend()
 private_key_file="PrivateRSAKey.pem"
-csr_url="http://certificate_authority:5000/sign_csr"
+csr_url="http://ca:5000/sign_csr"
 crt_file="crtvehicule.pem"
 
 ## Définition des fonctions ##

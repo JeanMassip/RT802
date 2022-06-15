@@ -15,21 +15,33 @@ from cryptography.hazmat.primitives.asymmetric import rsa
 from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives.serialization import Encoding
 
+from VehiculetoCA import buildcsr, loadprivatekeyfromfile, requestcert, savecsrtodisk, sendcsrtoca, savecrttofile
 
 from vehicule import Vehicule, VehiculeType
 from dotenv import load_dotenv
 
 load_dotenv()
+backend=default_backend()
+private_key_file="PrivateRSAKey.pem"
+csr_url="http://certificate_authority:5000/sign_csr"
+crt_file="crtvehicule.pem"
+
 MAX_MESSAGES = int(os.getenv("MAX_MESSAGES"))
 SLOW_START = int(os.getenv("SLOW_START"))
 SLOW_STOP = int(os.getenv("SLOW_STOP"))
 
 def main(argv):
     Gateway_url="http://certificate_authority:5000/auth"
-    Crt_file = "crtvehicule.pem"
+    private_key=loadprivatekeyfromfile(private_key_file)
+    builder=buildcsr()
+    request=requestcert(private_key,backend,builder)
+    print(savecsrtodisk(request))
+    response=sendcsrtoca(csr_url,request)
+    print(response.text)
+    print(savecrttofile(response, crt_file))
 
     try:
-        with open(Crt_file, "r") as Crt_file_object:
+        with open(crt_file, "r") as Crt_file_object:
             public_key = serialization.load_pem_public_key(Crt_file_object.read(),backend=default_backend())
     except:
         print("[-] Impossible de charger le certificat du véhicule")
