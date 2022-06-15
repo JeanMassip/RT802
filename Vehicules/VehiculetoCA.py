@@ -26,7 +26,7 @@ import requests
 
 backend=default_backend()
 private_key_file="PrivateRSAKey.pem"
-csr_url="http://ca.projet.local:5000/sign_csr"
+csr_url="http://certificate_authority:5000/sign_csr"
 crt_file="crtvehicule.pem"
 
 ## Définition des fonctions ##
@@ -173,4 +173,5 @@ builder=buildcsr()
 request=requestcert(private_key,backend,builder)
 print(savecsrtodisk(request))
 response=sendcsrtoca(csr_url,request)
-savecrttofile(response, crt_file)
+print(response.text)
+print(savecrttofile(response, crt_file))

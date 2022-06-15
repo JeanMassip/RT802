@@ -21,7 +21,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 MAX_MESSAGES = int(os.getenv("MAX_MESSAGES"))
-SLOW_START = int(os.getenv("SL OW_START"))
+SLOW_START = int(os.getenv("SLOW_START"))
 SLOW_STOP = int(os.getenv("SLOW_STOP"))
 
 def main(argv):

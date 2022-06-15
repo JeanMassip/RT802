@@ -12,12 +12,25 @@ services:
   broker:
     build: ./Broker
     depends_on:
+      - mosquitto
       - certificate_authority
   vehicule1:
     build: ./Vehicules
+    environment: 
+      - MAX_MESSAGES=50
+      - SLOW_START=20
+      - SLOW_STOP=40
+      - BROKER_ADDR="mosquitto"
+      - BROKER_PORT=1883
     depends_on:
       - certificate_authority
   vehicule2:
     build: ./Vehicules
+    environment: 
+      - MAX_MESSAGES=50
+      - SLOW_START=20
+      - SLOW_STOP=40
+      - BROKER_ADDR="mosquitto"
+      - BROKER_PORT=1883
     depends_on:
       - certificate_authority
