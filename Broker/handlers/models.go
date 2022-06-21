@@ -9,6 +9,10 @@ const (
 	DENM_FOG          uint = 7
 )
 
+type Message struct {
+	Vehicule Vehicule `json:"message"`
+}
+
 type Vehicule struct {
 	StationID   string `json:"station_id"`
 	StationType uint   `json:"station_type"`

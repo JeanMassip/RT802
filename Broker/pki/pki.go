@@ -1,8 +1,12 @@
 package pki
 
 import (
+	"crypto"
+	"crypto/rsa"
+	"crypto/sha256"
 	"crypto/x509"
 	"encoding/pem"
+	"errors"
 	"fmt"
 	"io/ioutil"
 )
@@ -18,22 +22,24 @@ func ValidateCertificate(data []byte) (string, error) {
 		return "", err
 	}
 
-	caCert, err := ioutil.ReadFile("CAcrt.pem")
+	caData, err := ioutil.ReadFile("ca-public-key.pem")
 	if err != nil {
 		return "", err
 	}
 
-	roots := x509.NewCertPool()
-	if ok := roots.AppendCertsFromPEM(caCert); !ok {
-		fmt.Println("Certificate not added ")
+	nBlock, _ := pem.Decode(caData)
+	caCert, err := x509.ParseCertificate(nBlock.Bytes)
+	if err != nil {
+		return "", err
 	}
 
-	opts := x509.VerifyOptions{
-		Roots: roots,
-	}
-
-	if _, err := cert.Verify(opts); err != nil {
-		return "", fmt.Errorf("invalid certificate : %v", err)
+	hash := sha256.New()
+	hash.Write(cert.RawTBSCertificate)
+	hashData := hash.Sum(nil)
+	err = rsa.VerifyPKCS1v15(caCert.PublicKey.(*rsa.PublicKey), crypto.SHA256, hashData, cert.Signature)
+	if err != nil {
+		fmt.Println(err)
+		return "", errors.New("certificate not signed by CA")
 	}
 
 	return cert.Subject.CommonName, nil

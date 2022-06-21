@@ -34,7 +34,6 @@ func New() (*Receiver, error) {
 
 	r.MessageHandler = func(client mqtt.Client, msg mqtt.Message) {
 		strMsg := string(msg.Payload())
-		fmt.Printf("message received : %s\n", strMsg)
 		r.MessageChan <- &strMsg
 	}
 
@@ -46,8 +45,8 @@ func (r *Receiver) Connect() context.Context {
 	opts.AddBroker("tcp://mosquitto:1883")
 	opts.SetClientID(fmt.Sprintf("receiver-%d", rand.Intn(1000)))
 	opts.SetDefaultPublishHandler(r.MessageHandler)
-	opts.Username = "gateway"
-	opts.Password = "YJkdi7u3W!6UU39d@e"
+	// opts.Username = "gateway"
+	// opts.Password = "YJkdi7u3W!6UU39d@e"
 	opts.OnConnect = r.ConnectHandler
 	opts.OnConnectionLost = r.ConnectionLostHandler
 	r.Client = mqtt.NewClient(opts)

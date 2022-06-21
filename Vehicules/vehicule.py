@@ -6,7 +6,7 @@ from enum import Enum
 from paho.mqtt import client as mqtt
 
 
-class VehiculeType(str, Enum):
+class VehiculeType(int, Enum):
     ORDINARY = 5
     EMERGENCY = 10
     OPERATOR = 15
@@ -17,7 +17,7 @@ port = os.getenv("BROKER_PORT")
 
 
 class Vehicule:
-    def __init__(self, stationID: int, stationType: VehiculeType) -> None:
+    def __init__(self, stationID: str, stationType: VehiculeType) -> None:
         self.stationID = stationID
         self.stationType = stationType
         self.heading = random.choice([0, 180])
@@ -31,7 +31,7 @@ class Vehicule:
         self.client = mqtt.Client(f'mqtt-station-{stationID}')
         #client.username_pw_set(username, password)
         self.client.on_connect = on_connect
-        self.client.connect("192.168.0.2", port)
+        self.client.connect("mosquitto")
 
     def __del__(self):
         self.client.disconnect()

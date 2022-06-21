@@ -34,10 +34,12 @@ func NewCAMHandler() *CAMHandler {
 }
 
 func (handler *CAMHandler) HandleMessage(message string) error {
-	var vehicule Vehicule
-	if err := json.Unmarshal([]byte(message), &vehicule); err != nil {
+	var parsedMessage Message
+	fmt.Println(message)
+	if err := json.Unmarshal([]byte(message), &parsedMessage); err != nil {
 		return err
 	}
+	vehicule := parsedMessage.Vehicule
 
 	fmt.Println("Sensors Message Received - Handling...")
 
@@ -49,6 +51,8 @@ func (handler *CAMHandler) HandleMessage(message string) error {
 		handler.CheckSpeed()
 		handler.Client.Publish("/auth/cam", 0, false, message)
 		fmt.Println("Message Handled")
+	} else {
+		fmt.Println("Vehicule not authentified")
 	}
 
 	return nil

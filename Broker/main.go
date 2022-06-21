@@ -31,6 +31,7 @@ func main() {
 		cn, err := pki.ValidateCertificate(cert)
 		if err != nil {
 			w.WriteHeader(http.StatusUnprocessableEntity)
+			fmt.Println(err)
 			w.Write([]byte("Invalid certificate"))
 			return
 		}
@@ -45,7 +46,7 @@ func main() {
 	fmt.Println("Broker Started !")
 	go broker.Start()
 	fmt.Println("Server Started !")
-	if err := http.ListenAndServe("0.0.0.0:5000", router); err != nil {
+	if err := http.ListenAndServe("0.0.0.0:9000", router); err != nil {
 		log.Fatal(err)
 	}
 }
