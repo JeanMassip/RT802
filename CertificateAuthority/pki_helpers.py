@@ -97,7 +97,7 @@ def generate_csr(private_key, filename):
     return csr
     
 # pki_helpers.py
-def sign_csr(csr, ca_public_key, ca_private_key, new_filename):
+def sign_csr(csr, ca_public_key, ca_private_key):
     valid_from = datetime.utcnow()
     valid_until = valid_from + timedelta(days=30)
 
@@ -120,8 +120,7 @@ def sign_csr(csr, ca_public_key, ca_private_key, new_filename):
         backend=default_backend(),
     )
 
-    with open(new_filename, "wb") as keyfile:
-        keyfile.write(public_key.public_bytes(serialization.Encoding.PEM))
+    return public_key.public_bytes(serialization.Encoding.PEM)
 
-ca_private_key = generate_private_key("ca-private-key.pem", "DtIflMN1M@nLJ_wSoHY~")
-ca_public_key = generate_public_key(ca_private_key, "ca-public-key.pem")
+# ca_private_key = generate_private_key("ca-private-key.pem", "DtIflMN1M@nLJ_wSoHY~")
+# ca_public_key = generate_public_key(ca_private_key, "ca-public-key.pem")

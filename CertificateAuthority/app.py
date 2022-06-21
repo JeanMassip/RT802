@@ -1,4 +1,3 @@
-import os
 from flask import Flask, request
 from cryptography import x509
 from cryptography.hazmat.backends import default_backend
