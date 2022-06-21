@@ -1,4 +1,0 @@
-      - ./config/mosquitto.conf:/mosquitto/config/mosquit.conf:rw
-      - ./config/password.txt:/mosquitto/password.txt:rw
-      - ./config/:/mosquitto.acl/mosquitto.acl:rw
-  
