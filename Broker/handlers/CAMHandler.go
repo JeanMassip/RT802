@@ -1,9 +1,12 @@
 package handlers
 
 import (
+	"encoding/base64"
 	"encoding/json"
 	"fmt"
+	"jk/broker/pki"
 	"math/rand"
+	"regexp"
 	"time"
 
 	mqtt "github.com/eclipse/paho.mqtt.golang"
@@ -18,7 +21,7 @@ type CAMHandler struct {
 
 func NewCAMHandler() *CAMHandler {
 	opts := mqtt.NewClientOptions()
-	opts.AddBroker("tcp://mosquitto:1883")
+	opts.AddBroker("tcp://127.0.0.1:1883")
 	opts.SetClientID(fmt.Sprintf("handler-%d", rand.Intn(1000)))
 	client := mqtt.NewClient(opts)
 	if token := client.Connect(); token.Wait() && token.Error() != nil {
@@ -44,13 +47,32 @@ func (handler *CAMHandler) HandleMessage(message string) error {
 	fmt.Println("Sensors Message Received - Handling...")
 
 	if vec, ok := handler.Vehicules[vehicule.StationID]; ok {
-		vec.LastSeen = time.Now().UTC().String()
-		vec.Speed = vehicule.Speed
-		vec.Heading = vehicule.Heading
-		vec.Position = vehicule.Position
-		handler.CheckSpeed()
-		handler.Client.Publish("/auth/cam", 0, false, message)
-		fmt.Println("Message Handled")
+		re, _ := regexp.Compile("\\{\"message\": \\{[^}]*\\}")
+		bMatch := re.Find([]byte(message))
+		vecMessage := string(bMatch) + "}"
+
+		sig, err := base64.StdEncoding.DecodeString(parsedMessage.Signature)
+		if err != nil {
+			return err
+		}
+
+		ok, err := pki.ValidateSignature([]byte(vecMessage), sig, vec.PublicKey)
+		if err != nil {
+			return err
+		}
+
+		if ok {
+			vec.LastSeen = time.Now().UTC().String()
+			vec.Speed = vehicule.Speed
+			vec.Heading = vehicule.Heading
+			vec.Position = vehicule.Position
+			handler.CheckSpeed()
+			handler.Client.Publish("/auth/cam", 0, false, message)
+			fmt.Println("Message Handled")
+		} else {
+			fmt.Println("Wrong Singature")
+		}
+
 	} else {
 		fmt.Println("Vehicule not authentified")
 	}

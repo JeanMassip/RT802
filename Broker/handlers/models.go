@@ -1,5 +1,7 @@
 package handlers
 
+import "crypto/rsa"
+
 const (
 	DENM_NORMAL       uint = 1
 	DENM_ROADWORD     uint = 3
@@ -10,17 +12,19 @@ const (
 )
 
 type Message struct {
-	Vehicule Vehicule `json:"message"`
+	Vehicule  Vehicule `json:"message"`
+	Signature string   `json:"signature"`
 }
 
 type Vehicule struct {
-	StationID   string `json:"station_id"`
-	StationType uint   `json:"station_type"`
-	Speed       uint   `json:"speed"`
-	Heading     int    `json:"heading"`
-	Position    string `json:"position"`
-	LastSeen    string `json:"last_seen,omitempty"`
-	Slowed      bool   `json:"slowed,omitempty"`
+	StationID   string         `json:"station_id"`
+	StationType uint           `json:"station_type"`
+	Speed       uint           `json:"speed"`
+	Heading     int            `json:"heading"`
+	Position    string         `json:"position"`
+	LastSeen    string         `json:"last_seen,omitempty"`
+	Slowed      bool           `json:"slowed,omitempty"`
+	PublicKey   *rsa.PublicKey `json:"key,omitempty"`
 }
 
 type EventMesssage struct {

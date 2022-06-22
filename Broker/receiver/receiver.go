@@ -42,7 +42,7 @@ func New() (*Receiver, error) {
 
 func (r *Receiver) Connect() context.Context {
 	opts := mqtt.NewClientOptions()
-	opts.AddBroker("tcp://mosquitto:1883")
+	opts.AddBroker("tcp://127.0.0.1:1883")
 	opts.SetClientID(fmt.Sprintf("receiver-%d", rand.Intn(1000)))
 	opts.SetDefaultPublishHandler(r.MessageHandler)
 	// opts.Username = "gateway"

@@ -1,3 +1,4 @@
+from email import message
 import random
 import json
 import os
@@ -10,11 +11,6 @@ class VehiculeType(int, Enum):
     ORDINARY = 5
     EMERGENCY = 10
     OPERATOR = 15
-
-
-broker = os.getenv("BROKER_ADDR")
-port = os.getenv("BROKER_PORT")
-
 
 class Vehicule:
     def __init__(self, stationID: str, stationType: VehiculeType) -> None:
@@ -31,12 +27,12 @@ class Vehicule:
         self.client = mqtt.Client(f'mqtt-station-{stationID}')
         #client.username_pw_set(username, password)
         self.client.on_connect = on_connect
-        self.client.connect("mosquitto")
+        self.client.connect("127.0.0.1")
 
     def __del__(self):
         self.client.disconnect()
 
-    def default(self) -> None:
+    def default(self) -> str:
         message = {
             "message": {
                 "station_id": self.stationID,
@@ -47,7 +43,8 @@ class Vehicule:
             }
         }
 
-        self._send_message(message, "/sensors/cam")
+        return message
+        # self.send_message(message, "/sensors/cam")
 
     def slowed(self) -> None:
         message = {
@@ -60,9 +57,9 @@ class Vehicule:
             }
         }
 
-        self._send_message(message, "/sensors/cam")
+        self.send_message(message, "/sensors/cam")
 
-    def _send_message(self, message: dict, topic: str) -> None:
+    def send_message(self, message: dict, topic: str) -> None:
         msg = json.dumps(message)
         result = self.client.publish(topic, msg)
         status = result[0]

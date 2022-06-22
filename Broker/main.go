@@ -28,7 +28,7 @@ func main() {
 			return
 		}
 
-		cn, err := pki.ValidateCertificate(cert)
+		cn, pkey, err := pki.ValidateCertificate(cert)
 		if err != nil {
 			w.WriteHeader(http.StatusUnprocessableEntity)
 			fmt.Println(err)
@@ -36,7 +36,7 @@ func main() {
 			return
 		}
 
-		vec := handlers.Vehicule{StationID: cn}
+		vec := handlers.Vehicule{StationID: cn, PublicKey: pkey}
 		broker.AddVehiculeToHandler(vec)
 
 		w.WriteHeader(http.StatusAccepted)
